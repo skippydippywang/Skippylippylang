@@ -156,14 +156,8 @@ while True:
 ```
 
 
-
-
-
-
-
-
-
-
+You can reference multiple collections.
+This creates categories in the navigation with the configured names.
 
 ```yaml
 collections:
