@@ -1,303 +1,170 @@
 ---
-title: Configuration
+title: Embedded Programming
 nav_order: 2
 ---
 
-# Configuration
+# Embedded Programming
 {: .no_toc }
 
-Just the Docs has some specific configuration parameters that can be defined in your Jekyll site's \_config.yml file.
-{: .fs-6 .fw-300 }
+I was introduced to WOKWI which is an online electronic simulator. In WOKWI, I was able to porgram different microcontrollers with their repective programming languages to simulate circuits. For my first excersise I programmed an ESP32-C3 in C++ language. For the next 2 excersies, instead of using C++ to program, I used micropython to progam the ESP32-C3 & the RP2040. For Excersie 4 I was tasked to use Generative AI chat to create a program for the ESP32-C3 to read input values from a potentiometer and use it to control the intensity of an LED. For Excersie 5 I was tasked to use Generative AI chat to create a program for the Raspberry Pi Pico to control a neopixel ring display using a pushbutton.
 
-## Table of contents
-{: .no_toc .text-delta }
+For My Challenge exersice 1, I was tasked to develop a portable environmental monitoring device, comprising of an ESP32-C3 board with 128x64 OLED screen which will sample and display the ambient temperature and humidity using GEN AI to create the code and simulate it in WokWi.
+The prompt that I use was "Can you create me a code for an ESP32-C3 board that uses a 128x64 OLED screen which will sample and display the ambient temperature and humidity and a DHT22 Sensor.".
 
-1. TOC
-{:toc}
+### The code that I used:
 
----
+```C++
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+#include <DHT.h>
 
-View this site's [\_config.yml](https://github.com/just-the-docs/just-the-docs/tree/main/_config.yml) file as an example.
+// OLED Configuration
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+#define OLED_RESET    -1 // Reset pin # (or -1 if sharing Arduino reset pin)
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
-## Site logo
+// DHT22 Configuration
+#define DHTPIN 2          // Digital pin connected to the DHT sensor
+#define DHTTYPE DHT22     // DHT 22  (AM2302), AM2321
+DHT dht(DHTPIN, DHTTYPE);
 
-```yaml
-# Set a path/url to a logo that will be displayed instead of the title
-logo: "/assets/images/just-the-docs.png"
-```
+void setup() {
+  Serial.begin(115200);
 
-## Site favicon
+  // Initialize DHT sensor
+  dht.begin();
 
-```yaml
-# Set a path/url to a favicon that will be displayed by the browser
-favicon_ico: "/assets/images/favicon.ico"
-```
-
-If the path to your favicon is `/favicon.ico`, you can leave `favicon_ico` unset.
-
-## Search
-
-```yaml
-# Enable or disable the site search
-# Supports true (default) or false
-search_enabled: true
-
-search:
-  # Split pages into sections that can be searched individually
-  # Supports 1 - 6, default: 2
-  heading_level: 2
-  # Maximum amount of previews per search result
-  # Default: 3
-  previews: 3
-  # Maximum amount of words to display before a matched word in the preview
-  # Default: 5
-  preview_words_before: 5
-  # Maximum amount of words to display after a matched word in the preview
-  # Default: 10
-  preview_words_after: 10
-  # Set the search token separator
-  # Default: /[\s\-/]+/
-  # Example: enable support for hyphenated search words
-  tokenizer_separator: /[\s/]+/
-  # Display the relative url in search results
-  # Supports true (default) or false
-  rel_url: true
-  # Enable or disable the search button that appears in the bottom right corner of every page
-  # Supports true or false (default)
-  button: false
-  # Focus the search input by pressing `ctrl + focus_shortcut_key` (or `cmd + focus_shortcut_key` on macOS)
-  focus_shortcut_key: 'k'
-```
-
-## Mermaid Diagrams
-{: .d-inline-block }
-
-New (v0.4.0)
-{: .label .label-green }
-
-The minimum configuration requires the key for `version` ([from jsDelivr](https://cdn.jsdelivr.net/npm/mermaid/)) in `_config.yml`:
-
-```yaml
-mermaid:
-  # Version of mermaid library
-  # Pick an available version from https://cdn.jsdelivr.net/npm/mermaid/
-  version: "9.1.3"
-```
-
-Provide a `path` instead of a `version` key to load the mermaid library from a local file.
-
-See [the Code documentation]({% link docs/ui-components/code/index.md %}#mermaid-diagram-code-blocks) for more configuration options and information.
-
-## Aux links
-
-```yaml
-# Aux links for the upper right navigation
-aux_links:
-  "Just the Docs on GitHub":
-    - "//github.com/just-the-docs/just-the-docs"
-
-# Makes Aux links open in a new tab. Default is false
-aux_links_new_tab: false
-```
-
-## Navigation sidebar
-
-```yaml
-# Enable or disable the side/mobile menu globally
-# Nav menu can also be selectively enabled or disabled using page variables or the minimal layout
-nav_enabled: true
-```
-
-## Heading anchor links
-
-```yaml
-# Heading anchor links appear on hover over h1-h6 tags in page content
-# allowing users to deep link to a particular heading on a page.
-#
-# Supports true (default) or false
-heading_anchors: true
-```
-
-## External navigation links
-{: .d-inline-block }
-
-New (v0.4.0)
-{: .label .label-green }
-
-External links can be added to the navigation through the `nav_external_links` option.
-See [Navigation Structure]({% link docs/navigation/main/external.md %}) for more details.
-
-## Footer content
-
-```yaml
-# Footer content
-# appears at the bottom of every page's main content
-# Note: The footer_content option is deprecated and will be removed in a future major release. Please use `_includes/footer_custom.html` for more robust
-markup / liquid-based content.
-footer_content: "Copyright &copy; 2017-2020 Patrick Marsceill. Distributed by an <a href=\"https://github.com/just-the-docs/just-the-docs/tree/main/LICENSE.txt\">MIT license.</a>"
-
-# Footer last edited timestamp
-last_edit_timestamp: true # show or hide edit time - page must have `last_modified_date` defined in the frontmatter
-last_edit_time_format: "%b %e %Y at %I:%M %p" # uses ruby's time format: https://ruby-doc.org/stdlib-2.7.0/libdoc/time/rdoc/Time.html
-
-# Footer "Edit this page on GitHub" link text
-gh_edit_link: true # show or hide edit this page link
-gh_edit_link_text: "Edit this page on GitHub."
-gh_edit_repository: "https://github.com/just-the-docs/just-the-docs" # the github URL for your repo
-gh_edit_branch: "main" # the branch that your docs is served from
-# gh_edit_source: docs # the source that your files originate from
-gh_edit_view_mode: "tree" # "tree" or "edit" if you want the user to jump into the editor immediately
-```
-
-_note: `footer_content` is deprecated, but still supported. For a better experience we have moved this into an include called `_includes/footer_custom.html` which will allow for robust markup / liquid-based content._
-
-- the "page last modified" data will only display if a page has a key called `last_modified_date`, formatted in some readable date format
-- `last_edit_time_format` uses Ruby's DateTime formatter; for examples and information, please refer to the [official Ruby docs on `strftime` formatting](https://docs.ruby-lang.org/en/master/strftime_formatting_rdoc.html)
-- `gh_edit_repository` is the URL of the project's GitHub repository
-- `gh_edit_branch` is the branch that the docs site is served from; defaults to `main`
-- `gh_edit_source` is the source directory that your project files are stored in (should be the same as [site.source](https://jekyllrb.com/docs/configuration/options/))
-- `gh_edit_view_mode` is `"tree"` by default, which brings the user to the github page; switch to `"edit"` to bring the user directly into editing mode
-
-## Color scheme
-
-```yaml
-# Color scheme supports "light" (default) and "dark"
-color_scheme: dark
-```
-
-<button class="btn js-toggle-dark-mode">Preview dark color scheme</button>
-
-<script>
-const toggleDarkMode = document.querySelector('.js-toggle-dark-mode');
-
-jtd.addEvent(toggleDarkMode, 'click', function(){
-  if (jtd.getTheme() === 'dark') {
-    jtd.setTheme('light');
-    toggleDarkMode.textContent = 'Preview dark color scheme';
-  } else {
-    jtd.setTheme('dark');
-    toggleDarkMode.textContent = 'Return to the light side';
+  // Initialize OLED display
+  // Address 0x3C is common for 128x64 OLEDs
+  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+    Serial.println(F("SSD1306 allocation failed"));
+    for(;;); // Don't proceed, loop forever
   }
-});
-</script>
 
-See [Customization]({% link docs/customization.md %}) for more information.
+  display.clearDisplay();
+  display.setTextColor(SSD1306_WHITE);
+  display.setTextSize(1);
+  display.setCursor(0,0);
+  display.println("Initializing...");
+  display.display();
+  delay(2000);
+}
 
-## Callouts
-{: .d-inline-block }
+void loop() {
+  // Wait a few seconds between measurements
+  delay(2000);
 
-Updated (v0.11.0)
-{: .label .label-yellow }
+  float h = dht.readHumidity();
+  float t = dht.readTemperature(); // Celsius
 
-To use this feature, you need to configure a `color` and (optionally) `title` for each kind of callout you want to use, e.g.:
+  // Check if any reads failed and exit early (to try again).
+  if (isnan(h) || isnan(t)) {
+    Serial.println(F("Failed to read from DHT sensor!"));
+    return;
+  }
 
-```yaml
-callouts:
-  warning:
-    title: Warning
-    color: red
+  // Clear previous data
+  display.clearDisplay();
+  
+  // Header
+  display.setTextSize(1);
+  display.setCursor(0, 0);
+  display.println("ENV MONITOR");
+  display.drawLine(0, 12, 128, 12, SSD1306_WHITE);
+
+  // Display Temperature
+  display.setTextSize(1);
+  display.setCursor(0, 25);
+  display.print("Temp: ");
+  display.setTextSize(2);
+  display.print(t, 1);
+  display.cp437(true);
+  display.write(167); // Degree symbol
+  display.print("C");
+
+  // Display Humidity
+  display.setTextSize(1);
+  display.setCursor(0, 50);
+  display.print("Hum:  ");
+  display.setTextSize(2);
+  display.print(h, 1);
+  display.print("%");
+
+  // Update screen
+  display.display();
+}
 ```
 
-This uses the color `$red-300` for the title and left border, and `$red-000` for the other borders. You can then style a paragraph as a `warning` callout like this:
 
-```markdown
-{: .warning }
-A paragraph...
+For My Challenge exersice 2, I was tasked to develop an automated sanitizer dispensing unit which comprises of a Pi Pico board, an ultrasonic sensor, a servo motor and an LED indicator. When the user places his hand(s) at a distance of < 3 cm from the ultrasonic sensor, the servo motor will be activated to dispense the sanitizer lotion. The LED will light up at the same time to indicate that sanitizer lotion is being dispensed. I then used GEN AI to create the code and simulate it in WokWi.
+The prompt that I use was " Write me MicroPython code for a Pi Pico, When an HC-SR04 sensor detects an object closer than 3cm, rotate a servo motor and turn on an LED. Return servo to 0 and turn LED off after dispensing.".
+
+### The code that I used:
+
+```Python
+import machine
+import utime
+
+# Pin Setup
+trig = machine.Pin(15, machine.Pin.OUT)
+echo = machine.Pin(14, machine.Pin.IN)
+led = machine.Pin(13, machine.Pin.OUT)
+servo = machine.PWM(machine.Pin(16))
+servo.freq(50)
+
+def set_servo_angle(angle):
+    # Converts angle (0-180) to duty cycle for SG90
+    duty = int((angle / 180 * 6500) + 1600)
+    servo.duty_u16(duty)
+
+def get_distance():
+    trig.low()
+    utime.sleep_us(2)
+    trig.high()
+    utime.sleep_us(10)
+    trig.low()
+    
+    while echo.value() == 0:
+        signaloff = utime.ticks_us()
+    while echo.value() == 1:
+        signalon = utime.ticks_us()
+        
+    timepassed = signalon - signaloff
+    distance = (timepassed * 0.0343) / 2
+    return distance
+
+# Initialize: Servo at "closed" position
+set_servo_angle(0)
+led.value(0)
+
+while True:
+    dist = get_distance()
+    print(f"Distance: {dist:.2f} cm")
+    
+    if dist < 3:
+        print("Hand detected! Dispensing...")
+        led.value(1)          # Turn on LED
+        set_servo_angle(90)   # Press the pump
+        utime.sleep(1)        # Wait for lotion to flow
+        set_servo_angle(0)    # Release pump
+        led.value(0)          # Turn off LED
+        utime.sleep(2)        # Cooldown to prevent double-dispensing
+        
+    utime.sleep(0.1)
+
 ```
 
-{: .warning }
-A paragraph...
 
-The colors `grey-lt`, `grey-dk`, `purple`, `blue`, `green`, `yellow`, and `red` are predefined; to use a custom color, you need to define its `000` and `300` levels in your SCSS files. For example, to use `pink`, add the following to your `_sass/custom/setup.scss` file:
 
-```scss
-$pink-000: #f77ef1;
-$pink-300: #dd2cd4;
-```
 
-You can also adjust the overall level of callouts. Both color schemes use `300` color level for the title and left border. The difference is for the rest of the border:
 
-- `quiet` (the default when using the `light` or custom color schemes) uses `-000` as the outline
-- `loud` (the default when using the `dark` color scheme) uses `-300` as the outline
 
-See [Callouts]({% link docs/ui-components/callouts.md %}) for more information. The colors used in the theme are further described in [Color Utilities]({% link docs/utilities/color.md %}).
 
-## Google Analytics
 
-{: .warning }
-> [Google Analytics 4 will replace Universal Analytics](https://support.google.com/analytics/answer/11583528). On **July 1, 2023**, standard Universal Analytics properties will stop processing new hits. The earlier you migrate, the more historical data and insights you will have in Google Analytics 4.
 
-Universal Analytics (UA) and Google Analytics 4 (GA4) properties are supported.
 
-```yaml
-# Google Analytics Tracking (optional)
-# Supports a CSV of tracking ID strings (eg. "UA-1234567-89,G-1AB234CDE5")
-ga_tracking: UA-2709176-10
-ga_tracking_anonymize_ip: true # Use GDPR compliant Google Analytics settings (true/nil by default)
-```
-
-### Multiple IDs
-{: .d-inline-block .no_toc }
-
-New (v0.4.0)
-{: .label .label-green }
-
-This theme supports multiple comma-separated tracking IDs. This helps seamlessly transition UA properties to GA4 properties by tracking both for a while.
-
-```yaml
-ga_tracking: "UA-1234567-89,G-1AB234CDE5"
-```
-
-## Document collections
-
-By default, the navigation and search include normal [pages](https://jekyllrb.com/docs/pages/).
-You can also use [Jekyll collections](https://jekyllrb.com/docs/collections/) which group documents semantically together.
-
-{: .warning }
-> Collection folders always start with an underscore (`_`), e.g. `_tests`. You won't see your collections if you omit the prefix.
-
-For example, put all your test files in the `_tests` folder and create the `tests` collection:
-
-```yaml
-# Define Jekyll collections
-collections:
-  # Define a collection named "tests", its documents reside in the "_tests" directory
-  tests:
-    permalink: "/:collection/:path/"
-    output: true
-
-just_the_docs:
-  # Define which collections are used in just-the-docs
-  collections:
-    # Reference the "tests" collection
-    tests:
-      # Give the collection a name
-      name: Tests
-      # Exclude the collection from the navigation
-      # Supports true or false (default)
-      # nav_exclude: true
-      # Fold the collection in the navigation
-      # Supports true or false (default)
-      # nav_fold: true  # note: this option is new in v0.4
-      # Exclude the collection from the search
-      # Supports true or false (default)
-      # search_exclude: true
-```
-
-The navigation for all your normal pages (if any) is displayed before those in collections.
-
-<span>New (v0.4.0)</span>{: .label .label-green }
-Including `nav_fold: true` in a collection configuration *folds* that collection:
-an expander symbol appears next to the collection name,
-and clicking it displays/hides the links to the top-level pages of the collection.[^js-disabled]
-
-[^js-disabled]: <span>New (v0.6.0)</span>{: .label .label-green }
-    When JavaScript is disabled in the browser, all folded collections are automatically expanded,
-    since clicking expander symbols has no effect.
-    (In previous releases, navigation into folded collections required JavaScript to be enabled.)
-
-You can reference multiple collections.
-This creates categories in the navigation with the configured names.
 
 ```yaml
 collections:
